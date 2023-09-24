@@ -88,6 +88,8 @@ public final class NativeMethods {
         //      void *fnPtr;
         //   } JNINativeMethod;
         int structSize = methods.size() * 3 * ptrSize;
+        // MEMO: JNINativeMethod コンパチな構造を作る
+        // https://docs.oracle.com/javase/jp/1.5.0/guide/jni/spec/functions.html
         long memory = mm.allocateMemory(structSize + stringSize, true);
         if (memory == 0L) {
             throw new OutOfMemoryError("could not allocate native memory");
@@ -113,6 +115,9 @@ public final class NativeMethods {
             mm.putAddress(memory + off, m.function); off += ptrSize;
         }
 
+        // MEMO: ここで、Java_com_kenai_jffi_Foreign_registerNatives を呼び出す
+        // clazz: java側のstub class的なもの.
+        // memory: メソッド名やaddressがあるmemory.
         if (Foreign.getInstance().registerNatives(clazz, memory, methods.size()) != Foreign.JNI_OK) {
             throw new RuntimeException("failed to register native methods");
         }

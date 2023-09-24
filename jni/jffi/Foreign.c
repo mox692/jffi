@@ -213,6 +213,10 @@ JNIEXPORT jint JNICALL
 Java_com_kenai_jffi_Foreign_registerNatives(JNIEnv *env, jobject self, jclass clazz,
         jlong methods, jint nmethods)
 {
+    // MEMO: 
+    // 1. native 関数を検索して
+    // 2. classに、その関数を登録する
+    // ref: https://docs.oracle.com/javase/jp/1.5.0/guide/jni/spec/functions.html
     return (*env)->RegisterNatives(env, clazz, j2p(methods), nmethods);
 }
 
